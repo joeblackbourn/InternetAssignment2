@@ -1,0 +1,83 @@
+﻿@page
+@model InternetAssignment2.Models.Product
+@inject IHttpContextAccessor Accessor;
+@{
+	Layout = "_Layout";
+}
+
+@if (User.Identity.IsAuthenticated == true)
+{
+}
+
+public class ProductModel : PageModel
+{
+	public string Id { get; set; }
+	public string Name { get; set; }
+	public string Description { get; set; }
+	public decimal Price { get; set; }
+	public string ProductImage { get; set; }
+
+	[BindProperty]
+	public Product Products { get; set; }
+
+
+public void OnGet()
+{
+	Products = _db.Product.ToList();
+}
+
+	products = new List<Product>{
+	new Product()
+	{
+	Id = "01";
+	Name = "";
+	Description = "";
+	Price = "";
+	VAT = "";
+},
+	new Product()
+	{
+	Id = "02";
+	Name = "";
+	Description = "";
+	Price = "";
+	VAT = "";
+},
+
+	new Product()
+	{
+	Id = "03";
+	Name = "";
+	Description = "";
+	Price = "";
+	VAT = "";
+},
+
+	new Product()
+	{
+	Id = "04";
+	Name = "";
+	Description = "";
+	Price = "";
+	VAT = "";
+}
+
+public IActionResult OnGetDelete(string Id)
+{
+	_db.Remove(db.Product.Find(Id));
+	_db.SaveChanges();
+
+	if (!ModelState.IsValid)
+	{
+		return Page();
+	}
+	else
+	{
+		return RedirectToPage("Product");
+	}
+	}
+}
+
+
+
+}

@@ -1,0 +1,70 @@
+﻿@page
+@model InternetAssignment2.Pages.LoginModel
+@ViewData["customMessage"]
+@section scripts{
+	<partial name="_ValidationScriptsPartial" />
+}
+
+@{
+	Layout = "_Layout";
+}
+
+[Authorize(Roles = "Admin")]
+public class LoginModel : PageModel
+{
+	public readonly AppDataContext _db;
+
+	public formModel(AppDataContext db)
+	{
+		_db = db;
+	}
+
+	public readonly AppDataContext _db;
+
+	[Required]
+	[BindProperty]
+	public string Username { get; set; }
+
+	[Required]
+	[BindProperty]
+	public string Password { get; set; }
+
+	public string Message { get; set; }
+
+	<div class="form-group">
+		<label asp-for="Input.Username"></label>
+			<input asp-for="Input.Username" class="form-control" />
+			<span asp-for validation-for="Input.Username" class="text-danger"></span>
+
+	<div class="form-group">
+		<label asp-for="Input.Password"></label>
+			<input asp-for="Input.Password" class="form-control" />
+			<span asp-for validation-for="Input.Password" class="text-danger"></span>
+
+	</div>
+	</div>
+
+	public void OnPost(string Username, string Password)
+	{
+		ViewData["customMessage"] = $"{Username}"
+	}
+
+	public IActionResult OnPost()
+	{
+		_db.SaveChanges();
+
+		var user = new AppUser {
+		Username = Input.Username,
+		Password = Input.Password,
+	};
+
+		if (!ModelState.IsValid)
+		{
+			return Page();
+		}
+		else
+		{
+			return RedirectToPage("Index");
+		}
+	}
+}

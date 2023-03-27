@@ -1,0 +1,63 @@
+﻿@page
+@model InternetAssignment2.Pages.ManageUserModel
+@{
+	Layout = "_Layout";
+}
+
+private readonly RoleManager<IdentityRole> _roleManager;
+
+public ManageUserModel(RoleManager<IdentityRole> roleManager)
+	{
+		private readonly RoleManager<IdentityRole> _roleManager;
+		private raeadonly UserManager<MyUser> _userManager;
+		_userManager = userManager;
+		_roleManager = roleManager;
+
+	public async Task<IActionResult> OnGetAsync()
+	{
+		roles = await _roleManager.Roles.ToListAsync();
+		return Page();
+	}
+
+<table class="table table-striped">
+	<thread>
+		<tr>
+			<th>Id</th>
+			<th>User Roles</th>
+		</tr>
+	</thread>
+	<tbody>
+		</tr>				
+		}
+</table>
+
+<td>
+	<a class="btn btn-sm btn-danger order-button float-right" asp-page="/ManageUser"
+	asp-route-id="" asp-page-handeler="Delete">Delete Role</a>
+</td>
+
+public async Task<IActionResult> OnGetDeleteAsync()
+	{
+		var role = await _roleManager.FindByIdAsync(Id);
+		var result = await _roleManager.DeleteAsync(role);
+		return RedirectToPage("/ManageUser");
+	}
+
+public async Task<IActionResult> OnPostAsync()
+	{
+		await _roleManager.CreateAsync(new IdentityRole(roleName.Trim()));
+		return RedirectToPage("/ManageUser");
+	}
+
+<form method="post" asp-page-handler="Update" asp-route-id="@User">
+	<input asp-for="passwordString"/>
+	<input type="submit" value="Update Password" class="btn btn-default"/>
+</form>
+
+public async Task<IActionResult> OnPostUpdateAsync()
+	{
+		var users = await _userManager.FindByIdAsync(Id);
+		await _userManager.RemovePasswordAsync(users);
+		await _userManager.AddPasswordAsync(users, passwordString);
+		return RedirectToPage("/ManageUser");
+	}

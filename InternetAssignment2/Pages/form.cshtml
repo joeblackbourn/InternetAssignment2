@@ -1,0 +1,134 @@
+﻿@page
+@model InternetAssignment2.Pages.formModel
+@ViewData["customMessage"]
+@section scripts{
+	<partial name="_ValidationScriptsPartial"/>
+}
+
+@{
+	Layout = "_Layout";
+}
+
+@{
+	ViewData["Title"] = "Register";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+	<div class="col-md-4">
+		<form id="registerForm" asp-route-returnUrl="@Model" method="post">
+			<h2>Create a new account</h2>
+			<hr />
+			<div asp-validation-summary="ModelOnly" class="form-control" autocomplete="Username"
+		</form>
+	</div>
+</div>
+
+using System.ComponentModel.DataAnnotations;
+using Product.Models;
+
+[Authorize(Roles = "Admin")]
+public class formModel : PageModel
+{
+	public readonly AppDataContext _db;
+
+	public formModel(AppDataContext db)
+	{
+		_db = db;
+	}
+
+	public readonly AppDataContext _db;
+
+
+	private readonly RoleManager<IdentityRole>_roleManager;
+	private readonly IEmailSender _emailSender;
+
+	public formModel(
+		RoleManager<IdentityRole> roleManager,
+		ILogger<formModel> logger,
+	)
+	{
+		_emailSender = emailSender;
+		_roleManager = roleManager;
+	}
+
+	[Required]
+	[BindProperty]
+	public string Firstname { get; set; }
+
+	[Required]
+	[BindProperty]
+	public string Lastname { get; set; }
+
+	[Required]
+	[BindProperty]
+	public string Username { get; set; }
+
+	[Required]
+	[BindProperty]
+	public string Password { get; set; }
+
+	[Required]
+	[BindProperty]
+	public string Email { get; set; }
+
+	[BindProperty]
+	public Product Products { get; set; }
+
+	public string Message { get; set; }
+
+	<div class="form-group">
+		<label asp-for="Input.Firstname"></label>
+			<input asp-for="Input.Firstname" class="form-control"/>
+			<span asp-for validation-for="Input.Firstname" class="text-danger"></span>
+	</div>
+
+	public void OnPost(string Firstname, string Lastname, string Username, string Password, string Email)
+	{
+		ViewData["customMessage"] = $"{Username}"
+	}
+
+	public IActionResult OnPost()
+	{
+		_db.Product.Add(Products);
+		_db.SaveChanges();
+
+		var user = new AppUser {
+		Username = Input.Username,
+		Password = Input.Password,
+		Email = Input.Email,
+		Firstname = Input.Firstname,
+		Lastname = Input.Lastname
+	};
+
+		if (!ModelState.IsValid)
+		{
+			return Page();
+		}
+		else
+		{
+			return RedirectToPage("Index");
+		}
+
+		if(!await_roleManager.RoleExitsAsync("AdminManager"))
+		{
+			role.Name = "AdminManager";
+			await_roleManager.CreateAsync(role);
+		}
+		if(!await_roleManager.RoleExistsAsync("Visitor")){
+
+			role.Name = "Visitor";
+			await_roleManager.CreateAsync(role);
+		}
+
+		var result = await _userManager.CreateAsync(user, Input.Password);
+		await _userManager.AddToRoleAsync(user, role.Name);
+	}
+}
+
+
+<footer>
+	<p> Copyright 2023</p>
+	<p>@DateTime.Now</p>
+</footer>
